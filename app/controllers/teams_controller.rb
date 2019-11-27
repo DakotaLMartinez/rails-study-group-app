@@ -6,7 +6,6 @@ class TeamsController < ApplicationController
   end
 
   def show 
-    @team = Team.find(params[:id])
   end
 
   def new 
@@ -21,6 +20,24 @@ class TeamsController < ApplicationController
     else
       render :new
     end
+  end
+
+  def edit 
+    
+  end 
+
+  def update 
+    if @team.update(team_params)
+      flash[:success] = "Team successfully updated"
+      redirect_to team_path(@team)
+    else 
+      render :edit
+    end
+  end
+
+  def destroy 
+    @team.destroy
+    redirect_to teams_path
   end
 
   private 

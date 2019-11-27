@@ -1,9 +1,10 @@
 require 'rails_helper'
 
 describe "Teams Features", js: true do 
-  before(:all) do 
+  before(:each) do 
     @seahawks = Team.create(name: "Seahawks", coach: "Pete Carroll", city: "Seattle", sport: "Football") 
     @giants = Team.create(name: "Giants", coach: "Pat Schumer", city: "New York", sport: "Football") 
+    @jets = Team.create(name: "Jets", coach: "Joe Walsh", city: "New York", sport: "Football")
   end
   describe "index" do 
     it "displays all the teams" do 
@@ -37,6 +38,37 @@ describe "Teams Features", js: true do
       find('input[type="submit"]').click
       expect(page).to have_content("New York Jets")
       
+    end
+  end
+
+  describe "edit" do 
+    it "prefills with a team's previous data" do 
+      visit edit_team_path(@jets)
+      city_input = find('input#team_city').value
+      name_input = find('input#team_name').value
+      coach_input = find('input#team_coach').value
+      sport_input = find('input#team_sport').value
+      # expect that each of these inputs have values matching the @jets object
+      expect(city_input).to eq(@jets.city)
+      expect(name_input).to eq(@jets.name)
+      expect(coach_input).to eq(@jets.coach)
+      expect(sport_input).to eq(@jets.sport)
+      # next we change the coach value to the correct coach for the Jets and submit the form
+      fill_in('team_coach', with: "Adam Gase")
+      find('input[type="submit"]').click
+      # expect the next page to show us the new coach's name.
+      expect(page.current_path).to eq(team_path(@jets))
+      expect(page).to have_content("Adam Gase")
+    end
+  end
+
+  describe "delete" do 
+    it "removes an existing team from the database" do 
+      visit team_path(@jets)
+      click_on "Delete Team"
+      page.driver.browser.switch_to.alert.accept
+      expect(page.current_path).to eq(teams_path)
+      expect(page).not_to have_selector("a[href='#{team_path(@jets)}']")
     end
   end
   
