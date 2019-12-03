@@ -8,8 +8,7 @@ describe "Teams Features", js: true do
   end
   describe "index" do 
     it "displays all the teams" do 
-      
-      visit '/teams'
+      visit teams_path
       puts "Team count: #{Team.all.count}"
       expect(page).to have_content("New York Giants")
       expect(page).to have_content("Seattle Seahawks")
@@ -36,7 +35,8 @@ describe "Teams Features", js: true do
       expect(page).to have_selector('.field_with_errors')
       fill_in("team_coach", with: "Joe Walsh")
       find('input[type="submit"]').click
-      expect(page).to have_content("New York Jets")
+      expect(page.current_path).to eq(teams_path)
+      expect(page).to have_selector("a[href='#{team_path(Team.last)}']")
       
     end
   end
@@ -44,16 +44,16 @@ describe "Teams Features", js: true do
   describe "edit" do 
     it "prefills with a team's previous data" do 
       visit edit_team_path(@jets)
-      city_input = find('input#team_city').value
-      name_input = find('input#team_name').value
-      coach_input = find('input#team_coach').value
-      sport_input = find('input#team_sport').value
       # expect that each of these inputs have values matching the @jets object
-      expect(city_input).to eq(@jets.city)
-      expect(name_input).to eq(@jets.name)
-      expect(coach_input).to eq(@jets.coach)
-      expect(sport_input).to eq(@jets.sport)
+      expect(find('input#team_city').value).to eq(@jets.city)
+      expect(find('input#team_name').value).to eq(@jets.name)
+      expect(find('input#team_coach').value).to eq(@jets.coach)
+      expect(find('input#team_sport').value).to eq(@jets.sport)
       # next we change the coach value to the correct coach for the Jets and submit the form
+      fill_in('team_coach', with: "")
+      find('input[type="submit"]').click
+      expect(page).to have_selector('.field_with_errors')
+
       fill_in('team_coach', with: "Adam Gase")
       find('input[type="submit"]').click
       # expect the next page to show us the new coach's name.
