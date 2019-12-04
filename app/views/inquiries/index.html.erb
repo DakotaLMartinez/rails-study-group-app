@@ -1,0 +1,5 @@
+<h1>Inquiries</h1>
+<%= link_to "New Inquiry", new_inquiry_path %>
+<% @inquiries.each do |inquiry| %>
+  <p><%= link_to inquiry.name, inquiry_path(inquiry) %></p>
+<% end %>
