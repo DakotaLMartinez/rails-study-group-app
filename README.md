@@ -1,24 +1,16 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+12/3 Study Group
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Tasks:
+* Create an Inquiry model for storing contact form submissions
+  - name 
+  - email address
+  - phone number 
+  - content
+* Validations:
+  - require email, name, and content
+  - validate format of email and phone number
+* Add in error messages to display to users upon validation failure
+  - when a user submits the contact form and there was something invalid about the data they submitted, they will see an error message describing the requirements for the data. 
+  - When they submit proper (valid) data, the record in the database is created and they'll see their inquiry in the inquiries index view.
